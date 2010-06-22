@@ -10,8 +10,8 @@ const int SCREEN_BPP = 32;
 const int FRAMES_PER_SECOND = 60;
 
 //The attributes of the square
-const int SQUARE_WIDTH = 20;
-const int SQUARE_HEIGHT = 20;
+const int SQUARE_WIDTH = 200;
+const int SQUARE_HEIGHT = 200;
 
 // Event handler
 SDL_Event event;
@@ -54,25 +54,25 @@ bool init_GL()
 bool init()
 {
     //Initialize SDL
-    if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
+    if(SDL_Init( SDL_INIT_EVERYTHING ) < 0)
     {
         return false;
     }
 
     //Create Window
-    if( SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_OPENGL ) == NULL )
+    if(SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_OPENGL) == NULL )
     {
         return false;
     }
 
     //Initialize OpenGL
-    if( init_GL() == false )
+    if(init_GL() == false)
     {
         return false;
     }
 
     //Set caption
-    SDL_WM_SetCaption( "OpenGL Test", NULL );
+    SDL_WM_SetCaption("OpenGL Test", NULL);
 
     return true;
 }
@@ -95,21 +95,17 @@ Square::Square()
 void Square::show()
 {
     //Move to offset
-    glTranslatef( x, y, 0 );
+    glTranslatef(x, y, 0);
 
-    //Start quad
-    glBegin( GL_QUADS );
-
+    glBegin(GL_QUADS);
         //Set color to white
-        glColor4f( 1.0, 1.0, 1.0, 1.0 );
-
         //Draw square
-	    glVertex3f( 0,            0,             0 );
-	    glVertex3f( SQUARE_WIDTH, 0,             0 );
-	    glVertex3f( SQUARE_WIDTH, SQUARE_HEIGHT, 0 );
-	    glVertex3f( 0,            SQUARE_HEIGHT, 0 );
-
-    //End quad
+        glColor4f(1.0, 1.0, 1.0, 1.0);
+	    glVertex3f(0, 0, 0);
+	    glVertex3f(SQUARE_WIDTH, 0, 0);
+        glColor4f(0.5, 0.5, 0.5, 1.0);
+	    glVertex3f(SQUARE_WIDTH, SQUARE_HEIGHT, 0);
+	    glVertex3f(0, SQUARE_HEIGHT, 0);
     glEnd();
 
     //Reset
@@ -117,13 +113,13 @@ void Square::show()
 }
 
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
     //Quit flag
     bool quit = false;
 
     //Initialize
-    if( init() == false )
+    if (init() == false)
     {
         return 1;
     }
@@ -133,34 +129,29 @@ int main( int argc, char *argv[] )
 
     //The frame rate regulator
 
-	//Wait for user exit
-	while( quit == false )
-	{
+    // Turn on wireframe mode
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    // Turn off wireframe mode
+    //    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    
+	//Wait for user exit
+	while(quit == false)
+	{
         //While there are events to handle
 		while( SDL_PollEvent( &event ) )
-		{
-
 			if( event.type == SDL_QUIT )
-			{
                 quit = true;
-            }
-		}
-
 
 	    //Clear the screen
-	    glClear( GL_COLOR_BUFFER_BIT );
+	    glClear(GL_COLOR_BUFFER_BIT);
 
-	    //Show the square
 	    square.show();
 
 	    //Update screen
 	    SDL_GL_SwapBuffers();
-
 	}
 
-	//Clean up
 	clean_up();
-
 	return 0;
 }
